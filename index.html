@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Keyren 💙</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { maroon: '#800000', 'maroon-light': '#a52a2a', 'blue-dark': '#0b1121', 'blue-accent': '#38bdf8' },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'], serif: ['Playfair Display', 'serif'] }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+</head>
+<body class="text-white font-sans antialiased selection:bg-maroon selection:text-white overflow-x-hidden">
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <div id="canvas-container"></div>
+    <div id="words-container"></div>
+    <div id="fireflies-container"></div>
+    <div class="particles-layer" id="hearts-bg"></div>
+    <div class="particles-layer" id="petals-bg"></div>
+    <div id="shooting-stars-container"></div>
+
+    <audio id="bg-music" loop>
+        <source src="Music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-player" id="music-player">
+        <div class="vinyl"></div>
+        <div class="visualizer">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <span class="text-sm text-blue-accent font-bold tracking-widest animate-pulse ml-2 text-shadow">PLAYING</span>
+    </div>
+
+    <div id="intro-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-blue-dark">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-maroon/30 via-blue-dark to-blue-dark animate-pulse"></div>
+        <div class="relative flex justify-center items-center mb-16">
+            <div class="absolute w-48 h-48 border-t-4 border-b-4 border-maroon rounded-full animate-[spin_3s_linear_infinite] opacity-80 shadow-[0_0_60px_#a52a2a]"></div>
+            <div class="absolute w-36 h-36 border-l-4 border-r-4 border-blue-accent rounded-full animate-[spin_2s_linear_infinite_reverse] opacity-80 shadow-[0_0_40px_#38bdf8]"></div>
+            <h1 class="text-6xl font-serif text-maroon-light z-10 shimmer-text neon-glow text-center px-4">Kecantikan Keyren</h1>
+        </div>
+        <p class="text-blue-accent/80 mb-10 font-bold tracking-[0.3em] text-sm uppercase drop-shadow-[0_0_10px_#38bdf8] animate-bounce">Nyalakan Suara & Bersiaplah</p>
+        <button onclick="startExperience()" class="magnetic-btn px-14 py-5 rounded-full bg-black/50 border-2 border-blue-accent text-blue-accent hover:bg-blue-accent hover:text-blue-dark hover:shadow-[0_0_50px_#38bdf8] transition-all duration-300 font-bold tracking-[0.2em] text-lg z-10 hover-target overflow-hidden relative group backdrop-blur-sm">
+            <span class="relative z-10">BUKA PESAN</span>
+            <div class="absolute inset-0 h-full w-0 bg-gradient-to-r from-blue-accent to-blue-400 transition-all duration-500 ease-out group-hover:w-full z-0"></div>
+        </button>
+    </div>
+
+    <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
+        
+        <main class="min-h-screen flex flex-col items-center justify-center p-6 text-center relative pt-20" id="hero">
+            <h1 class="text-7xl md:text-9xl font-serif mb-10 shimmer-text neon-glow" data-aos="zoom-in" data-aos-duration="2000">Hai, Keyren</h1>
+            <div class="max-w-4xl bg-white/5 p-12 rounded-3xl backdrop-blur-xl border border-maroon/50 shadow-[0_0_60px_rgba(128,0,0,0.6)] glass-box relative overflow-hidden" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.4">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-56 bg-blue-accent/20 rounded-full blur-[80px] pointer-events-none"></div>
+                <p id="typewriter" class="text-2xl md:text-3xl text-white font-light leading-relaxed typewriter-text relative z-10 text-shadow drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"></p>
+            </div>
+        </main>
+
+        <section class="py-32 overflow-hidden relative">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h2 class="text-5xl font-serif text-maroon-light mb-6 neon-glow shimmer-text">Pesona Semestaku</h2>
+                <p class="text-gray-200 max-w-lg mx-auto px-4 text-xl leading-relaxed">Di sini kutaruh beberapa bukti betapa cantiknya kamu.<br><span class="text-blue-accent font-bold animate-pulse mt-3 inline-block drop-shadow-[0_0_10px_#38bdf8]">Sentuh fotonya untuk melihat sesuatu.</span></p>
+            </div>
+            <div class="scene" data-aos="zoom-in" data-aos-duration="2000">
+                <div class="carousel">
+                    <div class="carousel-item item-1" onclick="bukaFoto('https://files.catbox.moe/7imps1.jpg', 'Matahari mungkin bersinar terang, tapi bagiku, pesonamu di foto ini jauh lebih menyilaukan mataku.')"><img src="https://files.catbox.moe/7imps1.jpg" alt="Foto 1" class="hover-target"></div>
+                    <div class="carousel-item item-2" onclick="bukaFoto('https://files.catbox.moe/qcapl8.jpg', 'Kalau ada penghargaan untuk senyum termanis di alam semesta, kurasa pialanya sudah pasti milikmu.')"><img src="https://files.catbox.moe/qcapl8.jpg" alt="Foto 2" class="hover-target"></div>
+                    <div class="carousel-item item-3" onclick="bukaFoto('https://files.catbox.moe/mkkdhg.jpg', 'Definisi cantik yang natural. Aku nggak ngerti lagi kenapa kamu bisa secantik ini setiap saat.')"><img src="https://files.catbox.moe/mkkdhg.jpg" alt="Foto 3" class="hover-target"></div>
+                    <div class="carousel-item item-4" onclick="bukaFoto('https://files.catbox.moe/u4k0j9.jpg', 'Melihat foto ini bikin aku sadar, mahakarya terindah Tuhan itu nyata, dan sekarang ada di hidupku.')"><img src="https://files.catbox.moe/u4k0j9.jpg" alt="Foto 4" class="hover-target"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 px-6 max-w-2xl mx-auto mb-40" data-aos="fade-up">
+            <div class="bg-gradient-to-br from-blue-dark/95 to-maroon/50 p-10 rounded-3xl border border-blue-accent/40 shadow-[0_0_60px_rgba(56,189,248,0.3)] glass-box relative" data-tilt data-tilt-max="5">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-maroon to-maroon-light text-white px-8 py-3 rounded-full text-base font-bold tracking-widest shadow-[0_0_20px_#800000] border border-red-400/30">KOTAK SURAT</div>
+                <h2 class="text-3xl font-bold mb-3 mt-6 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">Ada yang ingin disampaikan?</h2>
+                <p class="text-base text-center text-gray-300 mb-10">Tulis apa saja sayang. Aku akan membacanya saat ini juga.</p>
+                <textarea id="pesan-keyren" rows="4" class="w-full bg-black/70 border-2 border-maroon-light rounded-2xl p-6 text-white text-lg focus:outline-none focus:border-blue-accent focus:shadow-[0_0_30px_#38bdf8] transition-all mb-8 placeholder-gray-500 hover-target resize-none" placeholder="Ketik balasanmu di sini..."></textarea>
+                <button onclick="kirimPesanKeTelegram()" class="magnetic-btn w-full bg-gradient-to-r from-maroon to-maroon-light hover:from-blue-accent hover:to-blue-dark text-white font-bold py-5 rounded-2xl transition-all duration-500 shadow-[0_0_30px_#800000] hover:shadow-[0_0_50px_#38bdf8] flex justify-center items-center gap-3 hover-target text-xl">
+                    <span class="tracking-widest">Kirim Ke HP Aku</span> 🚀
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <button onclick="tekanTombolKangen()" class="magnetic-btn fixed bottom-8 right-8 z-50 bg-gradient-to-r from-maroon to-red-600 text-white rounded-full p-6 shadow-[0_0_40px_#ff0000] flex items-center gap-3 transition-all transform hover:scale-110 group hidden hover-target border-2 border-white/20" id="btn-kangen">
+        <span class="text-4xl animate-[bounce_1.5s_infinite]">❤️</span>
+        <span class="hidden group-hover:inline-block font-extrabold pr-3 whitespace-nowrap tracking-wider text-xl drop-shadow-md">Aku Kangen!</span>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
