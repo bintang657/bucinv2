@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Keyren</title>
+    <title>Untuk Keyren 💙</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,57 +32,222 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        body { margin: 0; overflow-x: hidden; background-color: #0b1121; }
+        
+        /* Background 3D */
         #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: linear-gradient(to bottom, #0b1121, #1e3a5f);
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: radial-gradient(circle at center, #1e3a5f 0%, #0b1121 100%);
         }
-        .floating-element {
-            animation: float 6s ease-in-out infinite;
+
+        /* Transisi Halaman */
+        .fade-in { animation: fadeIn 2s ease-in forwards; opacity: 0; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Kursor Kustom saat hover teks/tombol */
+        a, button, input, textarea { cursor: pointer; }
+
+        /* Efek Mengetik */
+        .typewriter-text {
+            border-right: 2px solid #38bdf8;
+            white-space: pre-wrap;
+            animation: blink 0.75s step-end infinite;
         }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        /* GALERI 3D CAROUSEL */
+        .scene {
+            width: 250px; height: 350px; perspective: 1000px; margin: 40px auto;
+        }
+        .carousel {
+            width: 100%; height: 100%; position: absolute;
+            transform-style: preserve-3d;
+            animation: rotateCarousel 20s infinite linear;
+        }
+        .carousel:hover { animation-play-state: paused; }
+        .carousel-item {
+            position: absolute; width: 250px; height: 350px;
+            border: 3px solid #800000; border-radius: 15px;
+            overflow: hidden; box-shadow: 0 0 20px rgba(128, 0, 0, 0.5);
+            /* Karena ada 4 foto, rotasinya dibagi 360/4 = 90 derajat */
+        }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+        .item-1 { transform: rotateY(0deg) translateZ(200px); }
+        .item-2 { transform: rotateY(90deg) translateZ(200px); }
+        .item-3 { transform: rotateY(180deg) translateZ(200px); }
+        .item-4 { transform: rotateY(270deg) translateZ(200px); }
+
+        @keyframes rotateCarousel {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Animasi Mengambang */
+        .floating { animation: float 4s ease-in-out infinite; }
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
     </style>
 </head>
-<body class="text-white font-sans antialiased overflow-x-hidden">
+<body class="text-white font-sans antialiased selection:bg-maroon selection:text-white">
 
     <div id="canvas-container"></div>
 
-    <main class="min-h-screen flex flex-col items-center justify-center p-6 relative">
-        <div class="text-center bg-blue-dark/60 p-10 rounded-3xl backdrop-blur-md border border-maroon/50 shadow-2xl shadow-maroon/20 floating-element max-w-lg w-full mt-20">
-            <h1 class="text-5xl md:text-6xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-maroon-light to-blue-accent mb-4">
+    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-blue-dark transition-opacity duration-1000">
+        <h1 class="text-4xl font-serif text-maroon-light mb-8 floating">Untuk Keyren</h1>
+        <button onclick="startExperience()" class="px-8 py-3 rounded-full bg-transparent border-2 border-blue-accent text-blue-accent hover:bg-blue-accent hover:text-blue-dark transition-all duration-300 font-bold tracking-widest">
+            BUKA PESAN
+        </button>
+    </div>
+
+    <div id="main-content" class="hidden opacity-0">
+        
+        <main class="min-h-screen flex flex-col items-center justify-center p-6 text-center relative pt-20">
+            <h1 class="text-5xl md:text-6xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-maroon-light to-blue-accent mb-6 floating">
                 Hai, Keyren
             </h1>
-            <p class="text-blue-accent/80 text-lg mb-8">
-                Gulir ke bawah untuk membaca pesanku. 👇
-            </p>
-        </div>
-    </main>
+            <div class="max-w-2xl bg-black/40 p-8 rounded-2xl backdrop-blur-sm border border-maroon/30 shadow-xl">
+                <p id="typewriter" class="text-xl md:text-2xl text-blue-accent/90 font-light leading-relaxed typewriter-text"></p>
+            </div>
+        </main>
 
-    <section class="py-20 px-6 max-w-2xl mx-auto relative z-10 min-h-[50vh]">
-        <div class="bg-gradient-to-br from-maroon/90 to-maroon-light/90 p-8 rounded-2xl shadow-lg border border-maroon-light transform hover:scale-105 transition duration-300">
-            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
-                💌 <span class="text-white">Pesan Untukmu</span>
-            </h2>
-            <p id="secret-message" class="text-lg italic text-white/90 leading-relaxed">
-                Memuat pesan rahasia... ⏳
-            </p>
-        </div>
-    </section>
+        <section class="py-20 overflow-hidden relative">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-serif text-maroon-light mb-4">Bingkai Waktu</h2>
+                <p class="text-gray-300 max-w-md mx-auto px-4">Beberapa momen terlalu berharga untuk sekadar diingat. Jadi, aku membingkainya di sini, agar tidak pernah pudar oleh waktu.</p>
+            </div>
+            
+            <div class="scene">
+                <div class="carousel">
+                    <div class="carousel-item item-1"><img src="https://files.catbox.moe/7imps1.jpg" alt="Foto 1"></div>
+                    <div class="carousel-item item-2"><img src="https://files.catbox.moe/qcapl8.jpg" alt="Foto 2"></div>
+                    <div class="carousel-item item-3"><img src="https://files.catbox.moe/mkkdhg.jpg" alt="Foto 3"></div>
+                    <div class="carousel-item item-4"><img src="https://files.catbox.moe/u4k0j9.jpg" alt="Foto 4"></div>
+                </div>
+            </div>
+        </section>
 
-    <button id="btn-kangen" class="fixed bottom-6 right-6 z-50 bg-maroon hover:bg-maroon-light text-white rounded-full p-4 shadow-lg shadow-maroon/50 flex items-center gap-2 transition-all transform hover:scale-110 group">
+        <section class="py-20 px-6 max-w-xl mx-auto mb-20">
+            <div class="bg-gradient-to-br from-blue-dark to-maroon/20 p-8 rounded-2xl border border-blue-accent/30 shadow-2xl">
+                <h2 class="text-2xl font-bold mb-2 text-center text-white">Ada yang ingin disampaikan?</h2>
+                <p class="text-sm text-center text-gray-400 mb-6">Pesan ini akan langsung terkirim ke HP-ku.</p>
+                
+                <textarea id="pesan-keyren" rows="4" class="w-full bg-black/50 border border-maroon-light rounded-xl p-4 text-white focus:outline-none focus:border-blue-accent transition-colors mb-4 placeholder-gray-500" placeholder="Ketik balasanmu di sini..."></textarea>
+                
+                <button onclick="kirimPesanKeTelegram()" class="w-full bg-maroon hover:bg-maroon-light text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-maroon/40 flex justify-center items-center gap-2">
+                    <span>Kirim Pesan</span> 🚀
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <button onclick="tekanTombolKangen()" class="fixed bottom-6 right-6 z-50 bg-maroon hover:bg-maroon-light text-white rounded-full p-4 shadow-lg shadow-maroon/50 flex items-center gap-2 transition-all transform hover:scale-110 group hidden" id="btn-kangen">
         <span class="text-2xl animate-pulse">❤️</span>
         <span class="hidden group-hover:inline-block font-semibold pr-2 whitespace-nowrap">Aku Kangen!</span>
     </button>
 
     <script>
+        // --- KONFIGURASI BOT TELEGRAM ---
+        const TELEGRAM_BOT_TOKEN = '8303109998:AAGOsoAvit6hCAjpSmjBeeCIj2MManPdgWM';
+        const TELEGRAM_CHAT_ID = '5552266500';
+
+        // Fungsi Umum untuk Menembak API Telegram
+        function sendToTelegram(textMessage, successMessage) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const data = {
+                chat_id: TELEGRAM_CHAT_ID,
+                text: textMessage,
+                parse_mode: 'HTML'
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(res => {
+                if(res.ok) {
+                    Swal.fire({
+                        title: 'Berhasil!', text: successMessage, icon: 'success',
+                        confirmButtonColor: '#800000', background: '#0b1121', color: '#fff'
+                    });
+                } else {
+                    throw new Error(res.description);
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Oops!', text: 'Gagal mengirim pesan. Coba lagi ya.', icon: 'error',
+                    confirmButtonColor: '#800000', background: '#0b1121', color: '#fff'
+                });
+                console.error('Error Telegram:', error);
+            });
+        }
+
+        // 1. Fungsi Tombol Kangen
+        function tekanTombolKangen() {
+            // Animasi Confetti
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#800000', '#38bdf8', '#ffffff'] });
+            
+            // Format Pesan untuk Telegram
+            const pesan = `🚨 <b>NOTIFIKASI BUCIN!</b>\n\nKeyren baru saja menekan tombol <b>"Aku Kangen!"</b> di website. ❤️\n\n<i>Cepat kabari dia sekarang!</i>`;
+            sendToTelegram(pesan, 'Notifikasi kangen kamu udah langsung masuk ke HP-ku! Tunggu balasanku ya ❤️');
+        }
+
+        // 2. Fungsi Kirim Pesan dari Textarea
+        function kirimPesanKeTelegram() {
+            const isiPesan = document.getElementById('pesan-keyren').value;
+            if(!isiPesan.trim()) {
+                Swal.fire({ icon: 'warning', title: 'Eh tunggu', text: 'Pesan kosong, jangan lupa diisi dulu ya.', confirmButtonColor: '#800000', background: '#0b1121', color: '#fff' });
+                return;
+            }
+
+            const pesan = `💌 <b>PESAN BARU DARI KEYREN</b>\n\n"${isiPesan}"`;
+            sendToTelegram(pesan, 'Pesanmu udah terkirim dan masuk ke HP-ku. Makasih ya! ✨');
+            
+            // Kosongkan form setelah kirim
+            document.getElementById('pesan-keyren').value = ''; 
+        }
+
+        // 3. Logika Mulai (Membuka Web & Menjalankan Efek Ngetik)
+        const textToType = "Di antara miliaran probabilitas di dunia, aku bersyukur semesta mengarahkan garis waktuku padamu.\n\nWebsite ini aku buat khusus untuk menyimpan sebagian kecil memori kita, dan sebagai tempat buat kamu kalau lagi kangen.";
+        let i = 0;
+
+        function typeWriter() {
+            if (i < textToType.length) {
+                document.getElementById("typewriter").innerHTML += textToType.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50); // Kecepatan ngetik (ms)
+            } else {
+                // Hilangkan cursor kedip setelah selesai
+                document.getElementById("typewriter").style.borderRight = "none";
+            }
+        }
+
+        function startExperience() {
+            // Transisi Layar
+            document.getElementById('intro-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.display = 'none';
+                const mainContent = document.getElementById('main-content');
+                mainContent.style.display = 'block';
+                
+                // Trigger Fade In
+                setTimeout(() => {
+                    mainContent.classList.add('fade-in');
+                    document.getElementById('btn-kangen').classList.remove('hidden');
+                    document.getElementById('btn-kangen').classList.add('fade-in');
+                    
+                    // Mulai efek ngetik
+                    setTimeout(typeWriter, 1000);
+                }, 100);
+            }, 1000);
+        }
+
+        // 4. ANIMASI BACKGROUND 3D (Three.js)
         const init3D = () => {
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
@@ -92,7 +258,7 @@
             container.appendChild(renderer.domElement);
 
             const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 150; 
+            const particlesCount = 300; 
             const posArray = new Float32Array(particlesCount * 3);
             const colorsArray = new Float32Array(particlesCount * 3);
 
@@ -100,9 +266,9 @@
             const colorBlue = new THREE.Color('#38bdf8');
 
             for(let i = 0; i < particlesCount * 3; i+=3) {
-                posArray[i] = (Math.random() - 0.5) * 15;
-                posArray[i+1] = (Math.random() - 0.5) * 15;
-                posArray[i+2] = (Math.random() - 0.5) * 10;
+                posArray[i] = (Math.random() - 0.5) * 20;
+                posArray[i+1] = (Math.random() - 0.5) * 20;
+                posArray[i+2] = (Math.random() - 0.5) * 15;
 
                 const mixedColor = Math.random() > 0.5 ? colorMaroon : colorBlue;
                 colorsArray[i] = mixedColor.r;
@@ -113,27 +279,26 @@
             particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
 
-            const material = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.8 });
+            const material = new THREE.PointsMaterial({ size: 0.03, vertexColors: true, transparent: true, opacity: 0.6 });
             const particlesMesh = new THREE.Points(particlesGeometry, material);
             scene.add(particlesMesh);
             camera.position.z = 5;
 
-            let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
-            const windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
-
+            let mouseX = 0, mouseY = 0;
             document.addEventListener('mousemove', (event) => {
-                mouseX = (event.clientX - windowHalfX);
-                mouseY = (event.clientY - windowHalfY);
+                mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
+                mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
             });
 
             const animate = () => {
                 requestAnimationFrame(animate);
-                targetX = mouseX * 0.001;
-                targetY = mouseY * 0.001;
-                particlesMesh.rotation.y += 0.002;
-                particlesMesh.rotation.x += 0.001;
-                particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
-                particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+                particlesMesh.rotation.y += 0.001;
+                particlesMesh.rotation.x += 0.0005;
+                
+                // Efek Parallax mengikuti kursor
+                particlesMesh.rotation.y += 0.05 * (mouseX - particlesMesh.rotation.y);
+                particlesMesh.rotation.x += 0.05 * (mouseY - particlesMesh.rotation.x);
+                
                 renderer.render(scene, camera);
             };
             animate();
@@ -145,79 +310,6 @@
             });
         };
         window.onload = init3D;
-    </script>
-
-    <script type="module">
-        // Import Firebase dari CDN
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // TODO: GANTI INI DENGAN KONFIGURASI FIREBASE MILIKMU NANTI
-        const firebaseConfig = {
-            apiKey: "API_KEY_KAMU",
-            authDomain: "PROJECT_ID.firebaseapp.com",
-            projectId: "PROJECT_ID",
-            storageBucket: "PROJECT_ID.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
-        };
-
-        // Inisialisasi Database
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // 1. MENGAMBIL PESAN DARI DATABASE
-        async function ambilPesan() {
-            try {
-                // Mencari dokumen "pesan_utama" di koleksi "konten_web"
-                const docRef = doc(db, "konten_web", "pesan_utama");
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    document.getElementById('secret-message').innerText = `"${docSnap.data().teks}"`;
-                } else {
-                    document.getElementById('secret-message').innerText = "Belum ada pesan baru dari pembuat web ini.";
-                }
-            } catch (error) {
-                console.error("Gagal mengambil data:", error);
-                document.getElementById('secret-message').innerText = "Koneksi database belum disetting dengan benar.";
-            }
-        }
-        
-        ambilPesan(); // Jalankan saat web dibuka
-
-        // 2. MENGIRIM DATA SAAT TOMBOL KANGEN DITEKAN
-        document.getElementById('btn-kangen').addEventListener('click', async () => {
-            
-            // Efek visual Confetti
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#800000', '#38bdf8', '#ffffff'] });
-
-            try {
-                // Menyimpan catatan ke database bahwa tombol ditekan
-                await addDoc(collection(db, "interaksi_kangen"), {
-                    pengirim: "Keyren",
-                    waktu: serverTimestamp()
-                });
-
-                Swal.fire({
-                    title: 'Terkirim! 🚀',
-                    text: 'Notifikasi kangen kamu udah masuk ke database!',
-                    icon: 'success',
-                    confirmButtonText: 'Tutup',
-                    confirmButtonColor: '#800000',
-                    background: '#0b1121',
-                    color: '#fff'
-                });
-            } catch (error) {
-                console.error("Gagal mengirim:", error);
-                Swal.fire({
-                    title: 'Oops!',
-                    text: 'Gagal mengirim ke database. Cek koneksi Firebase-mu.',
-                    icon: 'error',
-                    confirmButtonColor: '#800000'
-                });
-            }
-        });
     </script>
 </body>
 </html>
