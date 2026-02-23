@@ -29,71 +29,92 @@
     <style>
         body { margin: 0; overflow-x: hidden; background-color: #0b1121; cursor: none; }
         
-        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background: radial-gradient(circle at center, #1e3a5f 0%, #0b1121 100%); }
+        /* Breathing Aurora Background */
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -3; background: radial-gradient(circle at center, #1e3a5f 0%, #0b1121 100%); animation: bgBreathe 10s infinite alternate ease-in-out; }
+        @keyframes bgBreathe { 0% { background-size: 100% 100%; } 100% { background-size: 130% 130%; } }
 
-        /* Custom Cursor */
+        /* Custom Cursor & Fairy Dust */
         .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
-        .cursor-dot { width: 8px; height: 8px; background-color: #38bdf8; box-shadow: 0 0 10px #38bdf8; }
-        .cursor-outline { width: 30px; height: 30px; border: 2px solid rgba(128, 0, 0, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        .cursor-dot { width: 8px; height: 8px; background-color: #38bdf8; box-shadow: 0 0 20px #38bdf8, 0 0 40px #38bdf8; }
+        .cursor-outline { width: 30px; height: 30px; border: 2px solid rgba(128, 0, 0, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; box-shadow: inset 0 0 10px rgba(56,189,248,0.2); }
+        .fairy-dust { position: fixed; width: 5px; height: 5px; background: #fff; box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8; border-radius: 50%; pointer-events: none; z-index: 9998; animation: dustFall 1.2s linear forwards; }
+        @keyframes dustFall { 0% { opacity: 1; transform: scale(1) translate(0, 0); } 100% { opacity: 0; transform: scale(0) translate(calc(var(--dirX) * 40px), 60px); } }
 
-        /* Hati Melayang */
-        .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-        .heart { position: absolute; bottom: -100px; background-color: rgba(165, 42, 42, 0.4); width: 20px; height: 20px; transform: rotate(-45deg); animation: floatUp 10s infinite ease-in; filter: drop-shadow(0 0 5px rgba(165,42,42,0.5)); }
-        .heart::before, .heart::after { content: ''; position: absolute; width: 20px; height: 20px; background-color: inherit; border-radius: 50%; }
-        .heart::before { top: -10px; left: 0; }
-        .heart::after { left: 10px; top: 0; }
-        @keyframes floatUp { 0% { transform: translateY(0) rotate(-45deg) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-120vh) rotate(-45deg) scale(1.5); opacity: 0; } }
+        /* Ledakan Klik (Click Sparks) */
+        .click-spark { position: fixed; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 9999; animation: sparkOut 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+        @keyframes sparkOut { 0% { transform: translate(0,0) scale(1.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
 
-        /* Efek Teks Bercahaya (Shimmer) */
-        .shimmer-text {
-            background: linear-gradient(90deg, #a52a2a 0%, #38bdf8 50%, #a52a2a 100%);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shimmer 3s linear infinite;
-        }
-        @keyframes shimmer { to { background-position: 200% center; } }
+        /* Kata Melayang (Floating Whispers) */
+        #words-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
+        .floating-word { position: absolute; bottom: -50px; color: rgba(56, 189, 248, 0.08); font-size: 3rem; font-weight: bold; pointer-events: none; animation: floatWord linear forwards; text-shadow: 0 0 20px rgba(56, 189, 248, 0.1); white-space: nowrap; }
+        @keyframes floatWord { 0% { transform: translateY(0) scale(0.8) rotate(-5deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(-110vh) scale(1.5) rotate(5deg); opacity: 0; } }
 
-        /* Efek Mengetik */
-        .typewriter-text { border-right: 2px solid #38bdf8; white-space: pre-wrap; animation: blink 0.75s step-end infinite; }
-        @keyframes blink { 50% { border-color: transparent; } }
+        /* Partikel Background (Hati & Kelopak) */
+        .particles-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
+        .petal { position: absolute; top: -50px; background-color: rgba(56, 189, 248, 0.6); width: 12px; height: 18px; border-radius: 50% 0 50% 0; animation: fallingPetal 15s infinite linear; filter: drop-shadow(0 0 10px rgba(56,189,248,0.8)); }
+        @keyframes fallingPetal { 0% { transform: translateY(-50px) rotate(0deg) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg) translateX(150px); opacity: 0; } }
+        .heart { position: absolute; bottom: -100px; background-color: rgba(165, 42, 42, 0.5); width: 25px; height: 25px; transform: rotate(-45deg); animation: floatUp 12s infinite ease-in; filter: drop-shadow(0 0 10px rgba(165,42,42,0.8)); }
+        .heart::before, .heart::after { content: ''; position: absolute; width: 25px; height: 25px; background-color: inherit; border-radius: 50%; }
+        .heart::before { top: -12.5px; left: 0; } .heart::after { left: 12.5px; top: 0; }
+        @keyframes floatUp { 0% { transform: translateY(0) rotate(-45deg) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-120vh) rotate(-45deg) scale(1.8); opacity: 0; } }
 
         /* Bintang Jatuh */
-        .shooting-star { position: absolute; width: 100px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0), #38bdf8); animation: shoot 4s infinite linear; z-index: -1; opacity: 0; transform: rotate(-45deg); }
+        .shooting-star { position: absolute; width: 150px; height: 3px; background: linear-gradient(90deg, rgba(255,255,255,0), #fff, #38bdf8); animation: shoot 4s infinite linear; z-index: -1; opacity: 0; transform: rotate(-45deg); filter: drop-shadow(0 0 10px #38bdf8); }
         @keyframes shoot { 0% { transform: translateX(100vw) translateY(-20vh) rotate(-45deg); opacity: 1; } 100% { transform: translateX(-20vw) translateY(100vh) rotate(-45deg); opacity: 0; } }
 
-        /* GALERI 3D CAROUSEL */
-        .scene { width: 250px; height: 350px; perspective: 1000px; margin: 40px auto; }
+        /* Teks Bercahaya (Shimmer) */
+        .shimmer-text { background: linear-gradient(90deg, #a52a2a 0%, #38bdf8 50%, #a52a2a 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 2.5s linear infinite; }
+        @keyframes shimmer { to { background-position: 200% center; } }
+
+        .typewriter-text { border-right: 3px solid #38bdf8; white-space: pre-wrap; animation: blink 0.75s step-end infinite; }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        /* GALERI 3D CAROUSEL & GLASS SHINE */
+        .scene { width: 250px; height: 350px; perspective: 1200px; margin: 60px auto; }
         .carousel { width: 100%; height: 100%; position: absolute; transform-style: preserve-3d; animation: rotateCarousel 20s infinite linear; }
         .carousel:hover { animation-play-state: paused; cursor: pointer; }
-        .carousel-item { position: absolute; width: 250px; height: 350px; border: 3px solid #800000; border-radius: 15px; overflow: hidden; box-shadow: 0 0 30px rgba(56, 189, 248, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: none;}
-        .carousel-item:hover { box-shadow: 0 0 50px rgba(165, 42, 42, 0.8); border-color: #38bdf8; }
-        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
-        .item-1 { transform: rotateY(0deg) translateZ(200px); }
-        .item-2 { transform: rotateY(90deg) translateZ(200px); }
-        .item-3 { transform: rotateY(180deg) translateZ(200px); }
-        .item-4 { transform: rotateY(270deg) translateZ(200px); }
+        .carousel-item { position: absolute; width: 250px; height: 350px; border: 4px solid #800000; border-radius: 15px; overflow: hidden; box-shadow: 0 0 40px rgba(56, 189, 248, 0.4); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: none;}
+        
+        /* Efek Kilauan Kaca saat Hover */
+        .carousel-item::after { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); transition: 0.75s; z-index: 2; pointer-events: none; }
+        .carousel-item:hover::after { left: 150%; transition: 0.75s ease-in-out; }
+        .carousel-item:hover { transform: scale(1.15); box-shadow: 0 0 80px rgba(165, 42, 42, 1); border-color: #38bdf8; z-index: 10; }
+        
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9); transition: filter 0.3s; }
+        .carousel-item:hover img { filter: brightness(1.1); }
+        .item-1 { transform: rotateY(0deg) translateZ(220px); }
+        .item-2 { transform: rotateY(90deg) translateZ(220px); }
+        .item-3 { transform: rotateY(180deg) translateZ(220px); }
+        .item-4 { transform: rotateY(270deg) translateZ(220px); }
         @keyframes rotateCarousel { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 
-        /* Piringan Hitam Music */
-        .music-player { position: fixed; top: 20px; left: 20px; z-index: 50; display: none; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 30px; border: 1px solid #38bdf8; backdrop-filter: blur(5px); }
-        .vinyl { width: 30px; height: 30px; background: #111; border-radius: 50%; border: 2px solid #333; position: relative; animation: spinVinyl 3s linear infinite; display: flex; justify-content: center; align-items: center; }
-        .vinyl::after { content: ''; width: 10px; height: 10px; background: #800000; border-radius: 50%; }
+        /* Piringan Hitam & Visualizer */
+        .music-player { position: fixed; top: 20px; left: 20px; z-index: 50; display: none; align-items: center; gap: 15px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; border: 1px solid #38bdf8; backdrop-filter: blur(10px); box-shadow: 0 0 30px rgba(56,189,248,0.3); }
+        .vinyl { width: 40px; height: 40px; background: #111; border-radius: 50%; border: 2px solid #333; position: relative; animation: spinVinyl 3s linear infinite; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .vinyl::after { content: ''; width: 14px; height: 14px; background: #800000; border-radius: 50%; border: 2px solid #ff4d4d; }
         @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
+        .visualizer { display: flex; gap: 4px; height: 25px; align-items: flex-end; }
+        .bar { width: 5px; background: #38bdf8; border-radius: 3px; animation: bounceBar 1s infinite alternate ease-in-out; box-shadow: 0 0 10px #38bdf8; }
+        .bar:nth-child(1) { height: 12px; animation-delay: 0.1s; } .bar:nth-child(2) { height: 25px; animation-delay: 0.3s; background: #a52a2a; box-shadow: 0 0 10px #a52a2a; } .bar:nth-child(3) { height: 18px; animation-delay: 0.2s; } .bar:nth-child(4) { height: 10px; animation-delay: 0.4s; }
+        @keyframes bounceBar { 0% { height: 5px; } 100% { height: 25px; } }
 
         /* Tombol Magnetik */
         .magnetic-btn { transition: transform 0.1s; }
+
+        /* Cinematic Reveal */
+        .curtain-reveal { animation: slideUpReveal 1.8s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+        @keyframes slideUpReveal { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100%); opacity: 0; display: none; } }
     </style>
 </head>
-<body class="text-white font-sans antialiased selection:bg-maroon selection:text-white">
+<body class="text-white font-sans antialiased selection:bg-maroon selection:text-white overflow-x-hidden">
 
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
     <div id="canvas-container"></div>
-    <div class="hearts-bg" id="hearts-bg"></div>
-    
+    <div id="words-container"></div>
+    <div class="particles-layer" id="hearts-bg"></div>
+    <div class="particles-layer" id="petals-bg"></div>
     <div id="shooting-stars-container"></div>
 
     <audio id="bg-music" loop>
@@ -102,139 +123,194 @@
 
     <div class="music-player" id="music-player">
         <div class="vinyl"></div>
-        <span class="text-xs text-blue-accent animate-pulse">Playing our song...</span>
+        <div class="visualizer">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <span class="text-sm text-blue-accent font-bold tracking-widest animate-pulse ml-2 text-shadow">PLAYING</span>
     </div>
 
-    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-blue-dark transition-opacity duration-1000">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-maroon/20 via-blue-dark to-blue-dark"></div>
-        <div class="w-32 h-32 border-t-4 border-b-4 border-maroon rounded-full animate-spin mb-8 absolute opacity-50 shadow-[0_0_30px_#a52a2a]"></div>
-        <h1 class="text-5xl font-serif text-maroon-light mb-12 z-10 shimmer-text text-center px-4" data-aos="zoom-in" data-aos-duration="1500">Kecantikan Keyren</h1>
-        <button onclick="startExperience()" class="magnetic-btn px-10 py-4 rounded-full bg-transparent border-2 border-blue-accent text-blue-accent hover:bg-blue-accent hover:text-blue-dark hover:shadow-[0_0_30px_#38bdf8] transition-all duration-300 font-bold tracking-widest z-10 hover-target">
-            BUKA PESAN
+    <div id="intro-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-blue-dark">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-maroon/30 via-blue-dark to-blue-dark animate-pulse"></div>
+        
+        <div class="relative flex justify-center items-center mb-16">
+            <div class="absolute w-48 h-48 border-t-4 border-b-4 border-maroon rounded-full animate-[spin_3s_linear_infinite] opacity-80 shadow-[0_0_60px_#a52a2a]"></div>
+            <div class="absolute w-36 h-36 border-l-4 border-r-4 border-blue-accent rounded-full animate-[spin_2s_linear_infinite_reverse] opacity-80 shadow-[0_0_40px_#38bdf8]"></div>
+            <h1 class="text-6xl font-serif text-maroon-light z-10 shimmer-text text-center px-4 drop-shadow-[0_0_30px_rgba(165,42,42,0.8)]">Kecantikan Keyren</h1>
+        </div>
+
+        <p class="text-blue-accent/80 mb-10 font-bold tracking-[0.3em] text-sm uppercase drop-shadow-[0_0_10px_#38bdf8] animate-bounce">Nyalakan Suara & Bersiaplah</p>
+        
+        <button onclick="startExperience()" class="magnetic-btn px-14 py-5 rounded-full bg-black/50 border-2 border-blue-accent text-blue-accent hover:bg-blue-accent hover:text-blue-dark hover:shadow-[0_0_50px_#38bdf8] transition-all duration-300 font-bold tracking-[0.2em] text-lg z-10 hover-target overflow-hidden relative group backdrop-blur-sm">
+            <span class="relative z-10">BUKA PESAN</span>
+            <div class="absolute inset-0 h-full w-0 bg-gradient-to-r from-blue-accent to-blue-400 transition-all duration-500 ease-out group-hover:w-full z-0"></div>
         </button>
     </div>
 
     <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
         
         <main class="min-h-screen flex flex-col items-center justify-center p-6 text-center relative pt-20" id="hero">
-            <h1 class="text-6xl md:text-8xl font-serif mb-8 shimmer-text" data-aos="fade-down" data-aos-duration="1000">
+            <h1 class="text-7xl md:text-9xl font-serif mb-10 shimmer-text drop-shadow-[0_0_30px_rgba(165,42,42,0.9)]" data-aos="zoom-in" data-aos-duration="2000">
                 Hai, Keyren
             </h1>
-            <div class="max-w-2xl bg-white/5 p-8 rounded-2xl backdrop-blur-md border border-maroon/40 shadow-[0_0_40px_rgba(128,0,0,0.4)] glass-box relative overflow-hidden" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-blue-accent/30 rounded-full blur-[50px] pointer-events-none"></div>
-                <p id="typewriter" class="text-xl md:text-2xl text-blue-accent/90 font-light leading-relaxed typewriter-text relative z-10"></p>
+            <div class="max-w-4xl bg-white/5 p-12 rounded-3xl backdrop-blur-xl border border-maroon/50 shadow-[0_0_60px_rgba(128,0,0,0.6)] glass-box relative overflow-hidden" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.4">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-56 bg-blue-accent/20 rounded-full blur-[80px] pointer-events-none"></div>
+                <p id="typewriter" class="text-2xl md:text-3xl text-white font-light leading-relaxed typewriter-text relative z-10 text-shadow drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"></p>
             </div>
         </main>
 
-        <section class="py-20 overflow-hidden relative">
-            <div class="text-center mb-10" data-aos="fade-up">
-                <h2 class="text-4xl font-serif text-maroon-light mb-4 text-shadow-lg shimmer-text">Pesona Keyren</h2>
-                <p class="text-gray-300 max-w-md mx-auto px-4">Di sini kutaruh beberapa bukti betapa cantiknya kamu.<br><span class="text-blue-accent font-semibold animate-pulse">Klik fotonya untuk melihat sesuatu.</span></p>
+        <section class="py-32 overflow-hidden relative">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h2 class="text-5xl font-serif text-maroon-light mb-6 text-shadow-lg shimmer-text drop-shadow-[0_0_20px_#a52a2a]">Pesona Semestaku</h2>
+                <p class="text-gray-200 max-w-lg mx-auto px-4 text-xl leading-relaxed">Di sini kutaruh beberapa bukti betapa cantiknya kamu.<br><span class="text-blue-accent font-bold animate-pulse mt-3 inline-block drop-shadow-[0_0_10px_#38bdf8]">Sentuh fotonya untuk melihat sesuatu.</span></p>
             </div>
             
-            <div class="scene" data-aos="zoom-in" data-aos-duration="1500">
+            <div class="scene" data-aos="zoom-in" data-aos-duration="2000">
                 <div class="carousel">
                     <div class="carousel-item item-1" onclick="bukaFoto('https://files.catbox.moe/7imps1.jpg', 'Matahari mungkin bersinar terang, tapi bagiku, pesonamu di foto ini jauh lebih menyilaukan mataku.')"><img src="https://files.catbox.moe/7imps1.jpg" alt="Foto 1" class="hover-target"></div>
-                    
                     <div class="carousel-item item-2" onclick="bukaFoto('https://files.catbox.moe/qcapl8.jpg', 'Kalau ada penghargaan untuk senyum termanis di alam semesta, kurasa pialanya sudah pasti milikmu.')"><img src="https://files.catbox.moe/qcapl8.jpg" alt="Foto 2" class="hover-target"></div>
-                    
                     <div class="carousel-item item-3" onclick="bukaFoto('https://files.catbox.moe/mkkdhg.jpg', 'Definisi cantik yang natural. Aku nggak ngerti lagi kenapa kamu bisa secantik ini setiap saat.')"><img src="https://files.catbox.moe/mkkdhg.jpg" alt="Foto 3" class="hover-target"></div>
-                    
                     <div class="carousel-item item-4" onclick="bukaFoto('https://files.catbox.moe/u4k0j9.jpg', 'Melihat foto ini bikin aku sadar, mahakarya terindah Tuhan itu nyata, dan sekarang ada di hidupku.')"><img src="https://files.catbox.moe/u4k0j9.jpg" alt="Foto 4" class="hover-target"></div>
                 </div>
             </div>
         </section>
 
-        <section class="py-20 px-6 max-w-xl mx-auto mb-20" data-aos="fade-up">
-            <div class="bg-gradient-to-br from-blue-dark/80 to-maroon/30 p-8 rounded-2xl border border-blue-accent/30 shadow-[0_0_30px_rgba(56,189,248,0.2)] glass-box" data-tilt data-tilt-max="5">
-                <h2 class="text-2xl font-bold mb-2 text-center text-white">Ada yang ingin disampaikan?</h2>
-                <p class="text-sm text-center text-gray-400 mb-6">Tulis apa saja. Aku akan membacanya saat ini juga.</p>
+        <section class="py-24 px-6 max-w-2xl mx-auto mb-40" data-aos="fade-up">
+            <div class="bg-gradient-to-br from-blue-dark/95 to-maroon/50 p-10 rounded-3xl border border-blue-accent/40 shadow-[0_0_60px_rgba(56,189,248,0.3)] glass-box relative" data-tilt data-tilt-max="5">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-maroon to-maroon-light text-white px-8 py-3 rounded-full text-base font-bold tracking-widest shadow-[0_0_20px_#800000] border border-red-400/30">KOTAK SURAT</div>
+                <h2 class="text-3xl font-bold mb-3 mt-6 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">Ada yang ingin disampaikan?</h2>
+                <p class="text-base text-center text-gray-300 mb-10">Tulis apa saja sayang. Aku akan membacanya saat ini juga.</p>
                 
-                <textarea id="pesan-keyren" rows="4" class="w-full bg-black/60 border border-maroon-light rounded-xl p-4 text-white focus:outline-none focus:border-blue-accent focus:shadow-[0_0_20px_#38bdf8] transition-all mb-4 placeholder-gray-500 hover-target" placeholder="Ketik balasanmu di sini..."></textarea>
+                <textarea id="pesan-keyren" rows="4" class="w-full bg-black/70 border-2 border-maroon-light rounded-2xl p-6 text-white text-lg focus:outline-none focus:border-blue-accent focus:shadow-[0_0_30px_#38bdf8] transition-all mb-8 placeholder-gray-500 hover-target resize-none" placeholder="Ketik balasanmu di sini..."></textarea>
                 
-                <button onclick="kirimPesanKeTelegram()" class="magnetic-btn w-full bg-gradient-to-r from-maroon to-maroon-light hover:from-blue-accent hover:to-blue-dark text-white font-bold py-4 rounded-xl transition-all duration-500 shadow-[0_0_15px_#800000] hover:shadow-[0_0_25px_#38bdf8] flex justify-center items-center gap-2 hover-target">
-                    <span class="tracking-wider">Kirim Pesan Ke Aku</span> 🚀
+                <button onclick="kirimPesanKeTelegram()" class="magnetic-btn w-full bg-gradient-to-r from-maroon to-maroon-light hover:from-blue-accent hover:to-blue-dark text-white font-bold py-5 rounded-2xl transition-all duration-500 shadow-[0_0_30px_#800000] hover:shadow-[0_0_50px_#38bdf8] flex justify-center items-center gap-3 hover-target text-xl">
+                    <span class="tracking-widest">Kirim Ke HP Aku</span> 🚀
                 </button>
             </div>
         </section>
 
     </div>
 
-    <button onclick="tekanTombolKangen()" class="magnetic-btn fixed bottom-6 right-6 z-50 bg-gradient-to-r from-maroon to-maroon-light text-white rounded-full p-5 shadow-[0_0_25px_#a52a2a] flex items-center gap-2 transition-all transform hover:scale-110 group hidden hover-target" id="btn-kangen">
-        <span class="text-3xl animate-pulse">❤️</span>
-        <span class="hidden group-hover:inline-block font-semibold pr-2 whitespace-nowrap tracking-wide">Aku Kangen!</span>
+    <button onclick="tekanTombolKangen()" class="magnetic-btn fixed bottom-8 right-8 z-50 bg-gradient-to-r from-maroon to-red-600 text-white rounded-full p-6 shadow-[0_0_40px_#ff0000] flex items-center gap-3 transition-all transform hover:scale-110 group hidden hover-target border-2 border-white/20" id="btn-kangen">
+        <span class="text-4xl animate-[bounce_1.5s_infinite]">❤️</span>
+        <span class="hidden group-hover:inline-block font-extrabold pr-3 whitespace-nowrap tracking-wider text-xl drop-shadow-md">Aku Kangen!</span>
     </button>
 
     <script>
-        // INISIALISASI SCROLL ANIMATION (AOS)
+        // 1. INISIALISASI AOS
         AOS.init({ once: false, mirror: true });
 
-        // LOGIKA KURSOR KUSTOM & TOMBOL MAGNETIK
+        // 2. KURSOR KUSTOM, MAGNETIK, FAIRY DUST & CLICK SPARKS
         const cursorDot = document.getElementById("cursor-dot");
         const cursorOutline = document.getElementById("cursor-outline");
         const magneticBtns = document.querySelectorAll('.magnetic-btn');
 
         window.addEventListener("mousemove", function (e) {
             const posX = e.clientX; const posY = e.clientY;
+            
             cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
             cursorOutline.style.animate = cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
 
-            // Efek Magnetik pada tombol
+            // Fairy Dust
+            if(Math.random() < 0.4) {
+                let dust = document.createElement('div');
+                dust.className = 'fairy-dust';
+                dust.style.left = `${posX}px`; dust.style.top = `${posY}px`;
+                dust.style.setProperty('--dirX', Math.random() > 0.5 ? 1 : -1);
+                document.body.appendChild(dust);
+                setTimeout(() => dust.remove(), 1200);
+            }
+
+            // Magnetic Button
             magneticBtns.forEach(btn => {
                 const rect = btn.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                
-                // Jika kursor dekat tombol (radius 100px)
-                if(Math.abs(x) < 100 && Math.abs(y) < 50) {
-                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.3}px)`;
+                if(Math.abs(x) < 120 && Math.abs(y) < 60) {
+                    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
                 } else {
                     btn.style.transform = `translate(0px, 0px)`;
                 }
             });
         });
+
+        // Click Sparks Animation
+        window.addEventListener('click', (e) => {
+            const colors = ['#38bdf8', '#a52a2a', '#ffffff'];
+            for(let i=0; i<12; i++) {
+                let spark = document.createElement('div');
+                spark.className = 'click-spark';
+                spark.style.left = e.clientX + 'px';
+                spark.style.top = e.clientY + 'px';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.boxShadow = `0 0 15px ${spark.style.backgroundColor}`;
+                
+                let angle = (Math.PI * 2 / 12) * i;
+                let distance = Math.random() * 50 + 30;
+                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                
+                document.body.appendChild(spark);
+                setTimeout(() => spark.remove(), 600);
+            }
+        });
         
         document.querySelectorAll('button, textarea, .hover-target').forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursorOutline.style.width = '60px'; cursorOutline.style.height = '60px';
-                cursorOutline.style.backgroundColor = 'rgba(56, 189, 248, 0.1)';
+                cursorOutline.style.width = '70px'; cursorOutline.style.height = '70px';
+                cursorOutline.style.backgroundColor = 'rgba(56, 189, 248, 0.15)';
                 cursorOutline.style.borderColor = '#38bdf8';
+                cursorOutline.style.boxShadow = '0 0 20px rgba(56,189,248,0.4)';
             });
             el.addEventListener('mouseleave', () => {
                 cursorOutline.style.width = '30px'; cursorOutline.style.height = '30px';
                 cursorOutline.style.backgroundColor = 'transparent';
                 cursorOutline.style.borderColor = 'rgba(128, 0, 0, 0.5)';
+                cursorOutline.style.boxShadow = 'inset 0 0 10px rgba(56,189,248,0.2)';
             });
         });
 
-        // BUAT HATI MELAYANG
-        function createHearts() {
-            const container = document.getElementById('hearts-bg');
-            for(let i=0; i<15; i++) {
-                let heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                heart.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(heart);
+        // 3. EFEK PARTIKEL LENGKAP
+        function createParticles(containerId, className, count, durationBase) {
+            const container = document.getElementById(containerId);
+            for(let i=0; i<count; i++) {
+                let el = document.createElement('div');
+                el.classList.add(className);
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (Math.random() * 5 + durationBase) + 's';
+                el.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(el);
             }
         }
-        createHearts();
+        createParticles('hearts-bg', 'heart', 20, 10);
+        createParticles('petals-bg', 'petal', 30, 12);
 
-        // BUAT BINTANG JATUH
         function createShootingStars() {
-            const container = document.getElementById('shooting-stars-container');
             setInterval(() => {
                 let star = document.createElement('div');
-                star.classList.add('shooting-star');
-                star.style.top = Math.random() * 50 + 'vh';
-                container.appendChild(star);
+                star.className = 'shooting-star';
+                star.style.top = Math.random() * 60 + 'vh';
+                document.getElementById('shooting-stars-container').appendChild(star);
                 setTimeout(() => star.remove(), 4000);
-            }, 3000); // Muncul setiap 3 detik
+            }, 2000); 
         }
         createShootingStars();
 
-        // --- KONFIGURASI TELEGRAM ---
+        // Kata Melayang (Floating Whispers)
+        const kataPujian = ["Keyren", "Sempurna", "Cantik", "Semestaku", "Manis", "Kesayangan", "Mine"];
+        function createFloatingWords() {
+            setInterval(() => {
+                let word = document.createElement('div');
+                word.className = 'floating-word font-serif';
+                word.innerText = kataPujian[Math.floor(Math.random() * kataPujian.length)];
+                word.style.left = Math.random() * 80 + 10 + 'vw';
+                word.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                document.getElementById('words-container').appendChild(word);
+                setTimeout(() => word.remove(), 25000);
+            }, 3000);
+        }
+        createFloatingWords();
+
+        // 4. TELEGRAM API
         const TELEGRAM_BOT_TOKEN = '8303109998:AAGOsoAvit6hCAjpSmjBeeCIj2MManPdgWM';
         const TELEGRAM_CHAT_ID = '5552266500';
 
@@ -247,39 +323,40 @@
         }
 
         function tekanTombolKangen() {
-            confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 }, colors: ['#800000', '#38bdf8', '#ffffff'] });
-            sendToTelegram(`🚨 <b>NOTIFIKASI BUCIN!</b>\n\nKeyren memencet tombol <b>"Aku Kangen!"</b> ❤️`, 'Notifikasi kangen langsung masuk ke HP-ku! Tunggu balasanku ya ❤️');
+            confetti({ particleCount: 500, spread: 360, origin: { y: 0.5 }, colors: ['#800000', '#38bdf8', '#ffffff', '#ff0000'] });
+            sendToTelegram(`🚨 <b>NOTIFIKASI BUCIN TINGKAT DEWA!</b>\n\nKeyren memencet tombol <b>"Aku Kangen!"</b> ❤️\n\nCepat hubungi bidadarimu sekarang!`, 'Notifikasi kangen langsung terbang ke HP-ku! Tunggu balasanku ya cantikk ❤️');
         }
 
         function kirimPesanKeTelegram() {
             const isi = document.getElementById('pesan-keyren').value;
-            if(!isi.trim()) return Swal.fire({ icon: 'warning', title: 'Tunggu', text: 'Pesan jangan kosong ya.', background: '#0b1121', color: '#fff' });
-            sendToTelegram(`💌 <b>PESAN DARI KEYREN</b>\n\n"${isi}"`, 'Pesanmu udah masuk ke HP-ku ✨');
+            if(!isi.trim()) return Swal.fire({ icon: 'warning', title: 'Tunggu Cantik', text: 'Pesan jangan dikosongin ya.', background: '#0b1121', color: '#fff' });
+            sendToTelegram(`💌 <b>SURAT DARI KEYREN</b>\n\n"${isi}"`, 'Pesan spesialmu udah masuk ke HP-ku ✨');
             document.getElementById('pesan-keyren').value = ''; 
         }
 
-        // FUNGSI POPUP FOTO (LIGHTBOX)
+        // 5. POPUP FOTO ROMANTIS
         function bukaFoto(url, pesan) {
             Swal.fire({
                 imageUrl: url,
-                imageAlt: 'Foto Keyren',
-                title: 'Cantik Banget',
-                text: pesan,
+                imageAlt: 'Foto Cantik Keyren',
+                title: '<span class="text-maroon-light font-serif text-4xl drop-shadow-md">Cantik Banget</span>',
+                html: `<p class="text-gray-200 italic text-xl mt-4 leading-relaxed">${pesan}</p>`,
                 background: '#0b1121',
                 color: '#fff',
-                confirmButtonColor: '#800000',
-                confirmButtonText: 'Tutup',
-                customClass: { image: 'rounded-xl shadow-[0_0_20px_#38bdf8]' }
+                confirmButtonColor: '#38bdf8',
+                confirmButtonText: '<span class="text-blue-dark font-extrabold px-6 text-lg tracking-widest">Tutup</span>',
+                customClass: { image: 'rounded-2xl shadow-[0_0_50px_#38bdf8] border-4 border-blue-accent', popup: 'border-2 border-maroon shadow-[0_0_50px_#800000]' },
+                showClass: { popup: 'animate__animated animate__zoomIn animate__faster' }
             });
         }
 
-        // --- LOGIKA BUKA WEB & EFEK NGETIK ---
-        const textToType = "Di antara miliaran probabilitas di dunia, aku bersyukur semesta mengarahkan garis waktuku padamu.\n\nWebsite ini kubangun khusus untuk mengabadikan betapa cantiknya kamu. Sebuah tempat agar kamu bisa selalu melihat dirimu dari sudut pandangku.";
+        // 6. LOGIKA START & KETIK
+        const textToType = "Di antara miliaran probabilitas di dunia, aku bersyukur semesta mengarahkan garis waktuku padamu.\n\nWebsite ini kubangun khusus untuk mengabadikan betapa cantiknya kamu. Sebuah tempat agar kamu bisa selalu melihat dirimu dari sudut pandangku yang mengagumimu.";
         let i = 0;
         function typeWriter() {
             if (i < textToType.length) {
                 document.getElementById("typewriter").innerHTML += textToType.charAt(i);
-                i++; setTimeout(typeWriter, 50);
+                i++; setTimeout(typeWriter, 60);
             } else { document.getElementById("typewriter").style.borderRight = "none"; }
         }
 
@@ -287,20 +364,21 @@
             document.getElementById('bg-music').play();
             document.getElementById('music-player').style.display = 'flex';
 
-            document.getElementById('intro-screen').style.opacity = '0';
+            const introScreen = document.getElementById('intro-screen');
+            introScreen.classList.add('curtain-reveal');
+            
             setTimeout(() => {
-                document.getElementById('intro-screen').style.display = 'none';
                 const main = document.getElementById('main-content');
                 main.style.display = 'block';
                 setTimeout(() => {
                     main.style.opacity = '1';
                     document.getElementById('btn-kangen').classList.remove('hidden');
-                    setTimeout(typeWriter, 1000);
+                    setTimeout(typeWriter, 800); 
                 }, 100);
-            }, 1000);
+            }, 1200); 
         }
 
-        // --- 3D BACKGROUND (Three.js) ---
+        // 7. 3D BACKGROUND (Three.js) - Extra Particles
         const init3D = () => {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -309,27 +387,28 @@
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
             const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(600); const col = new Float32Array(600);
+            const particles = 1000; // Super dense 3D particles
+            const pos = new Float32Array(particles*3); const col = new Float32Array(particles*3);
             const cMaroon = new THREE.Color('#a52a2a'); const cBlue = new THREE.Color('#38bdf8');
 
-            for(let i=0; i<600; i+=3) {
-                pos[i] = (Math.random()-0.5)*25; pos[i+1] = (Math.random()-0.5)*25; pos[i+2] = (Math.random()-0.5)*15;
+            for(let i=0; i<particles*3; i+=3) {
+                pos[i] = (Math.random()-0.5)*35; pos[i+1] = (Math.random()-0.5)*35; pos[i+2] = (Math.random()-0.5)*25;
                 const c = Math.random()>0.5 ? cMaroon : cBlue;
                 col[i]=c.r; col[i+1]=c.g; col[i+2]=c.b;
             }
             geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
             geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
 
-            const mat = new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.8 });
+            const mat = new THREE.PointsMaterial({ size: 0.06, vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
             const mesh = new THREE.Points(geo, mat); scene.add(mesh);
-            camera.position.z = 5;
+            camera.position.z = 7;
 
             let mx=0, my=0;
-            document.addEventListener('mousemove', e => { mx=(e.clientX-window.innerWidth/2)*0.001; my=(e.clientY-window.innerHeight/2)*0.001; });
+            document.addEventListener('mousemove', e => { mx=(e.clientX-window.innerWidth/2)*0.002; my=(e.clientY-window.innerHeight/2)*0.002; });
 
             const animate = () => {
                 requestAnimationFrame(animate);
-                mesh.rotation.y += 0.001; mesh.rotation.x += 0.0005;
+                mesh.rotation.y += 0.0015; mesh.rotation.x += 0.0008;
                 mesh.rotation.y += 0.05 * (mx - mesh.rotation.y); mesh.rotation.x += 0.05 * (my - mesh.rotation.x);
                 renderer.render(scene, camera);
             }; animate();
