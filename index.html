@@ -7,6 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     
+    <link rel="stylesheet" href="style.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -25,77 +27,6 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-
-    <style>
-        body { margin: 0; overflow-x: hidden; background-color: #0b1121; cursor: none; }
-        
-        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -3; background: radial-gradient(circle at center, #1e3a5f 0%, #0b1121 100%); animation: bgBreathe 10s infinite alternate ease-in-out; }
-        @keyframes bgBreathe { 0% { background-size: 100% 100%; } 100% { background-size: 130% 130%; } }
-
-        /* Custom Cursor, Fairy Dust & Click Sparks */
-        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
-        .cursor-dot { width: 8px; height: 8px; background-color: #38bdf8; box-shadow: 0 0 20px #38bdf8, 0 0 40px #38bdf8; }
-        .cursor-outline { width: 30px; height: 30px; border: 2px solid rgba(128, 0, 0, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; box-shadow: inset 0 0 10px rgba(56,189,248,0.2); }
-        .fairy-dust { position: fixed; width: 5px; height: 5px; background: #fff; box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8; border-radius: 50%; pointer-events: none; z-index: 9998; animation: dustFall 1.2s linear forwards; }
-        @keyframes dustFall { 0% { opacity: 1; transform: scale(1) translate(0, 0); } 100% { opacity: 0; transform: scale(0) translate(calc(var(--dirX) * 40px), 60px); } }
-        .click-spark { position: fixed; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 9999; animation: sparkOut 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
-        @keyframes sparkOut { 0% { transform: translate(0,0) scale(1.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
-
-        /* Golden Fireflies (Kunang-kunang) */
-        .firefly { position: fixed; width: 4px; height: 4px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #ffdf00, 0 0 20px #ffdf00, 0 0 30px #ffdf00; z-index: -1; pointer-events: none; animation: flutter 12s infinite ease-in-out alternate; }
-        @keyframes flutter { 0% { transform: translate(0, 0) scale(1); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(calc(var(--mx) * 100px), calc(var(--my) * -150px)) scale(1.5); opacity: 0; } }
-
-        /* Teks Melayang */
-        #words-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
-        .floating-word { position: absolute; bottom: -50px; color: rgba(56, 189, 248, 0.08); font-size: 3rem; font-weight: bold; pointer-events: none; animation: floatWord linear forwards; text-shadow: 0 0 20px rgba(56, 189, 248, 0.1); white-space: nowrap; }
-        @keyframes floatWord { 0% { transform: translateY(0) scale(0.8) rotate(-5deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(-110vh) scale(1.5) rotate(5deg); opacity: 0; } }
-
-        /* Partikel Background */
-        .particles-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-        .petal { position: absolute; top: -50px; background-color: rgba(56, 189, 248, 0.6); width: 12px; height: 18px; border-radius: 50% 0 50% 0; animation: fallingPetal 15s infinite linear; filter: drop-shadow(0 0 10px rgba(56,189,248,0.8)); }
-        @keyframes fallingPetal { 0% { transform: translateY(-50px) rotate(0deg) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg) translateX(150px); opacity: 0; } }
-        .heart { position: absolute; bottom: -100px; background-color: rgba(165, 42, 42, 0.5); width: 25px; height: 25px; transform: rotate(-45deg); animation: floatUp 12s infinite ease-in; filter: drop-shadow(0 0 10px rgba(165,42,42,0.8)); }
-        .heart::before, .heart::after { content: ''; position: absolute; width: 25px; height: 25px; background-color: inherit; border-radius: 50%; }
-        .heart::before { top: -12.5px; left: 0; } .heart::after { left: 12.5px; top: 0; }
-        @keyframes floatUp { 0% { transform: translateY(0) rotate(-45deg) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-120vh) rotate(-45deg) scale(1.8); opacity: 0; } }
-        .shooting-star { position: absolute; width: 150px; height: 3px; background: linear-gradient(90deg, rgba(255,255,255,0), #fff, #38bdf8); animation: shoot 4s infinite linear; z-index: -1; opacity: 0; transform: rotate(-45deg); filter: drop-shadow(0 0 10px #38bdf8); }
-        @keyframes shoot { 0% { transform: translateX(100vw) translateY(-20vh) rotate(-45deg); opacity: 1; } 100% { transform: translateX(-20vw) translateY(100vh) rotate(-45deg); opacity: 0; } }
-
-        /* Neon & Shimmer Text */
-        .neon-glow { text-shadow: 0 0 10px rgba(165,42,42,0.8), 0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.4); animation: pulseNeon 3s infinite alternate; }
-        @keyframes pulseNeon { 0% { text-shadow: 0 0 10px rgba(165,42,42,0.8), 0 0 20px rgba(56,189,248,0.6); } 100% { text-shadow: 0 0 20px rgba(165,42,42,1), 0 0 40px rgba(56,189,248,1), 0 0 60px rgba(56,189,248,0.8); } }
-        .shimmer-text { background: linear-gradient(90deg, #a52a2a 0%, #38bdf8 50%, #a52a2a 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 2.5s linear infinite; }
-        @keyframes shimmer { to { background-position: 200% center; } }
-        .typewriter-text { border-right: 3px solid #38bdf8; white-space: pre-wrap; animation: blink 0.75s step-end infinite; }
-        @keyframes blink { 50% { border-color: transparent; } }
-
-        /* 3D Carousel */
-        .scene { width: 250px; height: 350px; perspective: 1200px; margin: 60px auto; }
-        .carousel { width: 100%; height: 100%; position: absolute; transform-style: preserve-3d; animation: rotateCarousel 20s infinite linear; }
-        .carousel:hover { animation-play-state: paused; cursor: pointer; }
-        .carousel-item { position: absolute; width: 250px; height: 350px; border: 4px solid #800000; border-radius: 15px; overflow: hidden; box-shadow: 0 0 40px rgba(56, 189, 248, 0.4); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: none;}
-        .carousel-item::after { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); transition: 0.75s; z-index: 2; pointer-events: none; }
-        .carousel-item:hover::after { left: 150%; transition: 0.75s ease-in-out; }
-        .carousel-item:hover { transform: scale(1.15); box-shadow: 0 0 80px rgba(165, 42, 42, 1); border-color: #38bdf8; z-index: 10; }
-        .carousel-item img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9); transition: filter 0.3s; }
-        .carousel-item:hover img { filter: brightness(1.1); }
-        .item-1 { transform: rotateY(0deg) translateZ(220px); } .item-2 { transform: rotateY(90deg) translateZ(220px); }
-        .item-3 { transform: rotateY(180deg) translateZ(220px); } .item-4 { transform: rotateY(270deg) translateZ(220px); }
-        @keyframes rotateCarousel { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-
-        /* Audio & UI */
-        .music-player { position: fixed; top: 20px; left: 20px; z-index: 50; display: none; align-items: center; gap: 15px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; border: 1px solid #38bdf8; backdrop-filter: blur(10px); box-shadow: 0 0 30px rgba(56,189,248,0.3); }
-        .vinyl { width: 40px; height: 40px; background: #111; border-radius: 50%; border: 2px solid #333; position: relative; animation: spinVinyl 3s linear infinite; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .vinyl::after { content: ''; width: 14px; height: 14px; background: #800000; border-radius: 50%; border: 2px solid #ff4d4d; }
-        @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
-        .visualizer { display: flex; gap: 4px; height: 25px; align-items: flex-end; }
-        .bar { width: 5px; background: #38bdf8; border-radius: 3px; animation: bounceBar 1s infinite alternate ease-in-out; box-shadow: 0 0 10px #38bdf8; }
-        .bar:nth-child(1) { height: 12px; animation-delay: 0.1s; } .bar:nth-child(2) { height: 25px; animation-delay: 0.3s; background: #a52a2a; box-shadow: 0 0 10px #a52a2a; } .bar:nth-child(3) { height: 18px; animation-delay: 0.2s; } .bar:nth-child(4) { height: 10px; animation-delay: 0.4s; }
-        @keyframes bounceBar { 0% { height: 5px; } 100% { height: 25px; } }
-        .magnetic-btn { transition: transform 0.1s; }
-        .curtain-reveal { animation: slideUpReveal 1.8s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
-        @keyframes slideUpReveal { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100%); opacity: 0; display: none; } }
-    </style>
 </head>
 <body class="text-white font-sans antialiased selection:bg-maroon selection:text-white overflow-x-hidden">
 
@@ -115,21 +46,20 @@
 
     <div class="music-player" id="music-player">
         <div class="vinyl"></div>
-        <div class="visualizer"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+        <div class="visualizer">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
         <span class="text-sm text-blue-accent font-bold tracking-widest animate-pulse ml-2 text-shadow">PLAYING</span>
     </div>
 
     <div id="intro-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-blue-dark">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-maroon/30 via-blue-dark to-blue-dark animate-pulse"></div>
-        
         <div class="relative flex justify-center items-center mb-16">
             <div class="absolute w-48 h-48 border-t-4 border-b-4 border-maroon rounded-full animate-[spin_3s_linear_infinite] opacity-80 shadow-[0_0_60px_#a52a2a]"></div>
             <div class="absolute w-36 h-36 border-l-4 border-r-4 border-blue-accent rounded-full animate-[spin_2s_linear_infinite_reverse] opacity-80 shadow-[0_0_40px_#38bdf8]"></div>
             <h1 class="text-6xl font-serif text-maroon-light z-10 shimmer-text neon-glow text-center px-4">Kecantikan Keyren</h1>
         </div>
-
         <p class="text-blue-accent/80 mb-10 font-bold tracking-[0.3em] text-sm uppercase drop-shadow-[0_0_10px_#38bdf8] animate-bounce">Nyalakan Suara & Bersiaplah</p>
-        
         <button onclick="startExperience()" class="magnetic-btn px-14 py-5 rounded-full bg-black/50 border-2 border-blue-accent text-blue-accent hover:bg-blue-accent hover:text-blue-dark hover:shadow-[0_0_50px_#38bdf8] transition-all duration-300 font-bold tracking-[0.2em] text-lg z-10 hover-target overflow-hidden relative group backdrop-blur-sm">
             <span class="relative z-10">BUKA PESAN</span>
             <div class="absolute inset-0 h-full w-0 bg-gradient-to-r from-blue-accent to-blue-400 transition-all duration-500 ease-out group-hover:w-full z-0"></div>
@@ -139,9 +69,7 @@
     <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
         
         <main class="min-h-screen flex flex-col items-center justify-center p-6 text-center relative pt-20" id="hero">
-            <h1 class="text-7xl md:text-9xl font-serif mb-10 shimmer-text neon-glow" data-aos="zoom-in" data-aos-duration="2000">
-                Hai, Keyren
-            </h1>
+            <h1 class="text-7xl md:text-9xl font-serif mb-10 shimmer-text neon-glow" data-aos="zoom-in" data-aos-duration="2000">Hai, Keyren</h1>
             <div class="max-w-4xl bg-white/5 p-12 rounded-3xl backdrop-blur-xl border border-maroon/50 shadow-[0_0_60px_rgba(128,0,0,0.6)] glass-box relative overflow-hidden" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.4">
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-56 bg-blue-accent/20 rounded-full blur-[80px] pointer-events-none"></div>
                 <p id="typewriter" class="text-2xl md:text-3xl text-white font-light leading-relaxed typewriter-text relative z-10 text-shadow drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"></p>
@@ -153,7 +81,6 @@
                 <h2 class="text-5xl font-serif text-maroon-light mb-6 neon-glow shimmer-text">Pesona Semestaku</h2>
                 <p class="text-gray-200 max-w-lg mx-auto px-4 text-xl leading-relaxed">Di sini kutaruh beberapa bukti betapa cantiknya kamu.<br><span class="text-blue-accent font-bold animate-pulse mt-3 inline-block drop-shadow-[0_0_10px_#38bdf8]">Sentuh fotonya untuk melihat sesuatu.</span></p>
             </div>
-            
             <div class="scene" data-aos="zoom-in" data-aos-duration="2000">
                 <div class="carousel">
                     <div class="carousel-item item-1" onclick="bukaFoto('https://files.catbox.moe/7imps1.jpg', 'Matahari mungkin bersinar terang, tapi bagiku, pesonamu di foto ini jauh lebih menyilaukan mataku.')"><img src="https://files.catbox.moe/7imps1.jpg" alt="Foto 1" class="hover-target"></div>
@@ -169,9 +96,7 @@
                 <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-maroon to-maroon-light text-white px-8 py-3 rounded-full text-base font-bold tracking-widest shadow-[0_0_20px_#800000] border border-red-400/30">KOTAK SURAT</div>
                 <h2 class="text-3xl font-bold mb-3 mt-6 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">Ada yang ingin disampaikan?</h2>
                 <p class="text-base text-center text-gray-300 mb-10">Tulis apa saja sayang. Aku akan membacanya saat ini juga.</p>
-                
                 <textarea id="pesan-keyren" rows="4" class="w-full bg-black/70 border-2 border-maroon-light rounded-2xl p-6 text-white text-lg focus:outline-none focus:border-blue-accent focus:shadow-[0_0_30px_#38bdf8] transition-all mb-8 placeholder-gray-500 hover-target resize-none" placeholder="Ketik balasanmu di sini..."></textarea>
-                
                 <button onclick="kirimPesanKeTelegram()" class="magnetic-btn w-full bg-gradient-to-r from-maroon to-maroon-light hover:from-blue-accent hover:to-blue-dark text-white font-bold py-5 rounded-2xl transition-all duration-500 shadow-[0_0_30px_#800000] hover:shadow-[0_0_50px_#38bdf8] flex justify-center items-center gap-3 hover-target text-xl">
                     <span class="tracking-widest">Kirim Ke HP Aku</span> 🚀
                 </button>
@@ -185,226 +110,6 @@
         <span class="hidden group-hover:inline-block font-extrabold pr-3 whitespace-nowrap tracking-wider text-xl drop-shadow-md">Aku Kangen!</span>
     </button>
 
-    <script>
-        // 1. INISIALISASI AOS
-        AOS.init({ once: false, mirror: true });
-
-        // 2. KURSOR, MAGNETIK, FAIRY DUST & CLICK SPARKS
-        const cursorDot = document.getElementById("cursor-dot");
-        const cursorOutline = document.getElementById("cursor-outline");
-        const magneticBtns = document.querySelectorAll('.magnetic-btn');
-
-        window.addEventListener("mousemove", function (e) {
-            const posX = e.clientX; const posY = e.clientY;
-            cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
-            cursorOutline.style.animate = cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
-
-            if(Math.random() < 0.4) {
-                let dust = document.createElement('div');
-                dust.className = 'fairy-dust';
-                dust.style.left = `${posX}px`; dust.style.top = `${posY}px`;
-                dust.style.setProperty('--dirX', Math.random() > 0.5 ? 1 : -1);
-                document.body.appendChild(dust);
-                setTimeout(() => dust.remove(), 1200);
-            }
-
-            magneticBtns.forEach(btn => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                if(Math.abs(x) < 120 && Math.abs(y) < 60) {
-                    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
-                } else {
-                    btn.style.transform = `translate(0px, 0px)`;
-                }
-            });
-        });
-
-        window.addEventListener('click', (e) => {
-            const colors = ['#38bdf8', '#a52a2a', '#ffffff', '#ffdf00'];
-            for(let i=0; i<15; i++) {
-                let spark = document.createElement('div');
-                spark.className = 'click-spark';
-                spark.style.left = e.clientX + 'px'; spark.style.top = e.clientY + 'px';
-                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                spark.style.boxShadow = `0 0 15px ${spark.style.backgroundColor}`;
-                let angle = (Math.PI * 2 / 15) * i; let distance = Math.random() * 60 + 30;
-                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-                document.body.appendChild(spark);
-                setTimeout(() => spark.remove(), 600);
-            }
-        });
-        
-        document.querySelectorAll('button, textarea, .hover-target').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorOutline.style.width = '70px'; cursorOutline.style.height = '70px';
-                cursorOutline.style.backgroundColor = 'rgba(56, 189, 248, 0.15)'; cursorOutline.style.borderColor = '#38bdf8';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorOutline.style.width = '30px'; cursorOutline.style.height = '30px';
-                cursorOutline.style.backgroundColor = 'transparent'; cursorOutline.style.borderColor = 'rgba(128, 0, 0, 0.5)';
-            });
-        });
-
-        // 3. EFEK PARTIKEL EXTRA (Hati, Kelopak, Kunang-kunang)
-        function createParticles(containerId, className, count, durationBase) {
-            const container = document.getElementById(containerId);
-            for(let i=0; i<count; i++) {
-                let el = document.createElement('div'); el.classList.add(className);
-                el.style.left = Math.random() * 100 + 'vw';
-                el.style.animationDuration = (Math.random() * 5 + durationBase) + 's';
-                el.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(el);
-            }
-        }
-        createParticles('hearts-bg', 'heart', 20, 10);
-        createParticles('petals-bg', 'petal', 30, 12);
-
-        function createFireflies() {
-            const container = document.getElementById('fireflies-container');
-            for(let i=0; i<25; i++) {
-                let fly = document.createElement('div'); fly.className = 'firefly';
-                fly.style.left = Math.random() * 100 + 'vw'; fly.style.top = Math.random() * 100 + 'vh';
-                fly.style.setProperty('--mx', Math.random() > 0.5 ? 1 : -1);
-                fly.style.setProperty('--my', Math.random() > 0.5 ? 1 : -1);
-                fly.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(fly);
-            }
-        }
-        createFireflies();
-
-        function createShootingStars() {
-            setInterval(() => {
-                let star = document.createElement('div'); star.className = 'shooting-star';
-                star.style.top = Math.random() * 60 + 'vh';
-                document.getElementById('shooting-stars-container').appendChild(star);
-                setTimeout(() => star.remove(), 4000);
-            }, 2000); 
-        }
-        createShootingStars();
-
-        const kataPujian = ["Keyren", "Sempurna", "Cantik", "Semestaku", "Manis", "Kesayangan", "Mine"];
-        function createFloatingWords() {
-            setInterval(() => {
-                let word = document.createElement('div'); word.className = 'floating-word font-serif';
-                word.innerText = kataPujian[Math.floor(Math.random() * kataPujian.length)];
-                word.style.left = Math.random() * 80 + 10 + 'vw'; word.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                document.getElementById('words-container').appendChild(word);
-                setTimeout(() => word.remove(), 25000);
-            }, 3000);
-        }
-        createFloatingWords();
-
-        // 4. TELEGRAM API
-        const TELEGRAM_BOT_TOKEN = '8303109998:AAGOsoAvit6hCAjpSmjBeeCIj2MManPdgWM';
-        const TELEGRAM_CHAT_ID = '5552266500';
-
-        function sendToTelegram(textMessage, successMessage) {
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: textMessage, parse_mode: 'HTML' }) })
-            .then(res => res.json()).then(res => { if(res.ok) { Swal.fire({ title: 'Berhasil!', text: successMessage, icon: 'success', confirmButtonColor: '#800000', background: '#0b1121', color: '#fff' }); } })
-            .catch(err => Swal.fire({ title: 'Oops!', text: 'Gagal mengirim pesan.', icon: 'error', background: '#0b1121', color: '#fff' }));
-        }
-
-        function tekanTombolKangen() {
-            confetti({ particleCount: 500, spread: 360, origin: { y: 0.5 }, colors: ['#800000', '#38bdf8', '#ffffff', '#ff0000', '#ffdf00'] });
-            sendToTelegram(`🚨 <b>NOTIFIKASI BUCIN TINGKAT DEWA!</b>\n\nKeyren memencet tombol <b>"Aku Kangen!"</b> ❤️\n\nCepat hubungi bidadarimu sekarang!`, 'Notifikasi kangen langsung terbang ke HP-ku! Tunggu balasanku ya cantikk ❤️');
-        }
-
-        function kirimPesanKeTelegram() {
-            const isi = document.getElementById('pesan-keyren').value;
-            if(!isi.trim()) return Swal.fire({ icon: 'warning', title: 'Tunggu Cantik', text: 'Pesan jangan dikosongin ya.', background: '#0b1121', color: '#fff' });
-            sendToTelegram(`💌 <b>SURAT DARI KEYREN</b>\n\n"${isi}"`, 'Pesan spesialmu udah masuk ke HP-ku ✨');
-            document.getElementById('pesan-keyren').value = ''; 
-        }
-
-        function bukaFoto(url, pesan) {
-            Swal.fire({
-                imageUrl: url, imageAlt: 'Foto Cantik Keyren',
-                title: '<span class="text-maroon-light font-serif text-4xl drop-shadow-md">Cantik Banget</span>',
-                html: `<p class="text-gray-200 italic text-xl mt-4 leading-relaxed">${pesan}</p>`,
-                background: '#0b1121', color: '#fff', confirmButtonColor: '#38bdf8', confirmButtonText: '<span class="text-blue-dark font-extrabold px-6 text-lg tracking-widest">Tutup</span>',
-                customClass: { image: 'rounded-2xl shadow-[0_0_50px_#38bdf8] border-4 border-blue-accent', popup: 'border-2 border-maroon shadow-[0_0_50px_#800000]' },
-                showClass: { popup: 'animate__animated animate__zoomIn animate__faster' }
-            });
-        }
-
-        // 5. HYPERDRIVE & TYPING LOGIC
-        const textToType = "Di antara miliaran probabilitas di dunia, aku bersyukur semesta mengarahkan garis waktuku padamu.\n\nWebsite ini kubangun khusus untuk mengabadikan betapa cantiknya kamu. Sebuah tempat agar kamu bisa selalu melihat dirimu dari sudut pandangku yang mengagumimu.";
-        let i = 0; let warpSpeedActive = false;
-        
-        function typeWriter() {
-            if (i < textToType.length) {
-                document.getElementById("typewriter").innerHTML += textToType.charAt(i);
-                i++; setTimeout(typeWriter, 60);
-            } else { document.getElementById("typewriter").style.borderRight = "none"; }
-        }
-
-        function startExperience() {
-            document.getElementById('bg-music').play();
-            document.getElementById('music-player').style.display = 'flex';
-
-            // Aktifkan Warp Speed
-            warpSpeedActive = true;
-            setTimeout(() => { warpSpeedActive = false; }, 2000); // Berhenti warp setelah 2 detik
-
-            const introScreen = document.getElementById('intro-screen');
-            introScreen.classList.add('curtain-reveal');
-            
-            setTimeout(() => {
-                const main = document.getElementById('main-content');
-                main.style.display = 'block';
-                setTimeout(() => {
-                    main.style.opacity = '1';
-                    document.getElementById('btn-kangen').classList.remove('hidden');
-                    setTimeout(typeWriter, 800); 
-                }, 100);
-            }, 1200); 
-        }
-
-        // 6. 3D BACKGROUND (Three.js)
-        const init3D = () => {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-            const geo = new THREE.BufferGeometry();
-            const particles = 1200; 
-            const pos = new Float32Array(particles*3); const col = new Float32Array(particles*3);
-            const cMaroon = new THREE.Color('#a52a2a'); const cBlue = new THREE.Color('#38bdf8');
-
-            for(let i=0; i<particles*3; i+=3) {
-                pos[i] = (Math.random()-0.5)*40; pos[i+1] = (Math.random()-0.5)*40; pos[i+2] = (Math.random()-0.5)*30;
-                const c = Math.random()>0.5 ? cMaroon : cBlue;
-                col[i]=c.r; col[i+1]=c.g; col[i+2]=c.b;
-            }
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-
-            const mat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-            const mesh = new THREE.Points(geo, mat); scene.add(mesh);
-            camera.position.z = 8;
-
-            let mx=0, my=0;
-            document.addEventListener('mousemove', e => { mx=(e.clientX-window.innerWidth/2)*0.002; my=(e.clientY-window.innerHeight/2)*0.002; });
-
-            const animate = () => {
-                requestAnimationFrame(animate);
-                
-                // Warp Speed Logic
-                let speedMultiplier = warpSpeedActive ? 40 : 1; 
-                mesh.rotation.y += 0.0015 * speedMultiplier; 
-                mesh.rotation.x += 0.0008 * speedMultiplier;
-                
-                mesh.rotation.y += 0.05 * (mx - mesh.rotation.y); 
-                mesh.rotation.x += 0.05 * (my - mesh.rotation.x);
-                renderer.render(scene, camera);
-            }; animate();
-            window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
-        };
-        window.onload = init3D;
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
